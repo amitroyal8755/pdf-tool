@@ -171,6 +171,14 @@ def pdf_to_ppt(uploaded_file):
 # Streamlit UI
 st.set_page_config(page_title="PDF Tools", page_icon="📄", layout="wide")
 
+# Add a container with two columns for the logo and send image
+with st.container():
+    col1, col2 = st.columns([1, 4])  # 1:4 ratio for the columns
+    with col1:
+        st.image("logo.png", width=100)
+    with col2:
+        st.image("send_image.png", width=600)
+
 st.title("📄 PDF Tools Dashboard")
 st.markdown("Welcome to the PDF Tools Dashboard. Choose a tool from the sidebar to get started.")
 
@@ -320,3 +328,22 @@ elif tool == "PDF to PowerPoint":
             st.download_button("Download PowerPoint", output, file_name="converted.pptx")
         else:
             st.warning("Please upload a PDF file.")
+
+# Add footer
+st.markdown("""
+    <style>
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: white;
+            color: black;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+    <div class="footer">
+        <p>Powered by OneAmit</p>
+    </div>
+    """, unsafe_allow_html=True)
