@@ -13,6 +13,14 @@ import fitz  # This is the import for PyMuPDF
 import tempfile
 import os
 
+# Inject the Google site verification meta tag into the head section
+st.markdown(
+    """
+    <meta name="google-site-verification" content="fFXSjUHkzBdz0sWBJy2uAIHgwTTswufOA_x-qkSSqr8" />
+    """,
+    unsafe_allow_html=True
+)
+
 # Download Pandoc if it's not installed
 try:
     pypandoc.get_pandoc_path()
