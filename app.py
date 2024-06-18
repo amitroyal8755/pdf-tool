@@ -12,22 +12,37 @@ from pdf2image import convert_from_path
 import fitz  # This is the import for PyMuPDF
 import tempfile
 import os
+import threading
+import http.server
+import socketserver
 
-# Inject the Google site verification meta tag into the head section
+# Serve the HTML file
+def serve_html():
+    PORT = 8501  # You can change the port if needed
+
+    Handler = http.server.SimpleHTTPRequestHandler
+    httpd = socketserver.TCPServer(("", PORT), Handler)
+
+    print("serving at port", PORT)
+    httpd.serve_forever()
+
+# Start the HTML server in a separate thread
+thread = threading.Thread(target=serve_html)
+thread.daemon = True
+thread.start()
+
+# Streamlit app
+st.set_page_config(page_title="PDF Tools", page_icon="📄", layout="wide")
+
+# Add the iframe to include the HTML file with the meta tag
 st.markdown(
     """
-    <meta name="google-site-verification" content="fFXSjUHkzBdz0sWBJy2uAIHgwTTswufOA_x-qkSSqr8" />
+    <iframe src="http://localhost:8501/index.html" style="display:none;"></iframe>
     """,
     unsafe_allow_html=True
 )
 
-# Download Pandoc if it's not installed
-try:
-    pypandoc.get_pandoc_path()
-except OSError:
-    pypandoc.download_pandoc()
-
-# Helper functions
+# Helper functions for PDF tools
 def merge_pdfs(uploaded_files):
     merger = PdfMerger()
     for uploaded_file in uploaded_files:
@@ -175,9 +190,6 @@ def pdf_to_ppt(uploaded_file):
     prs.save(output)
     output.seek(0)
     return output
-
-# Streamlit UI
-st.set_page_config(page_title="PDF Tools", page_icon="📄", layout="wide")
 
 # Add a container with two columns for the logo and send image
 with st.container():
